@@ -3,7 +3,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![GitHub stars](https://img.shields.io/github/stars/VinceJan/llm-wiki-enhanced?style=social)](https://github.com/VinceJan/llm-wiki-enhanced)
 
-**[中文](README.zh-CN.md) | [Français](README.fr.md) | [Português](README.pt.md) | [日本語](README.ja.md) | [한국어](README.ko.md)**
+**[中文](docs/langs/README.zh-CN.md) | [Français](docs/langs/README.fr.md) | [Português](docs/langs/README.pt.md) | [日本語](docs/langs/README.ja.md) | [한국어](docs/langs/README.ko.md)**
 
 ---
 
