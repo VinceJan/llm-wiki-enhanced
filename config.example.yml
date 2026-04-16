@@ -1,0 +1,17 @@
+# llm-wiki-enhanced configuration
+
+tool: obsidian          # obsidian or logseq
+wiki_path: ./wiki       # path to wiki directory
+pages_dir: pages        # relative to wiki_path
+raw_path: ./raw         # path to raw source directory
+memory_path: ~/.claude/projects/llm-wiki/memory/  # L1 memory directory (git-ignored)
+
+namespaces:
+  - Tech
+  - Business
+  - Content
+  - Projects
+  - People
+  - Learning
+  - Reference
+  - Careers

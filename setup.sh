@@ -1,0 +1,356 @@
+#!/bin/bash
+set -eo pipefail
+
+# Detect script location BEFORE any cd operations
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+# ----- Prerequisites -----
+check_command() {
+    if ! command -v "$1" &> /dev/null; then
+        echo -e "\033[0;31mRequired: '$1' is not installed.\033[0m"
+        echo "Please install $1 and try again."
+        exit 1
+    fi
+}
+
+check_command python3
+check_command git
+
+# Colors
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+CYAN='\033[0;36m'
+YELLOW='\033[1;33m'
+NC='\033[0m' # No Color
+BOLD='\033[1m'
+
+echo ""
+echo -e "${CYAN}${BOLD}llm-wiki-enhanced setup${NC}"
+echo -e "${CYAN}Build Karpathy's LLM Wiki with Claude Code + Raw Archive${NC}"
+echo ""
+
+# ----- Step 1: Tool selection -----
+echo -e "${BOLD}Which note-taking tool do you use?${NC}"
+echo "  1) Logseq"
+echo "  2) Obsidian"
+read -p "Enter choice [1/2]: " tool_choice
+
+case $tool_choice in
+    1) TOOL="logseq" ;;
+    2) TOOL="obsidian" ;;
+    *) echo -e "${RED}Invalid choice. Exiting.${NC}"; exit 1 ;;
+esac
+echo -e "${GREEN}Selected: $TOOL${NC}"
+echo ""
+
+# ----- Step 2: Wiki path -----
+if [ "$TOOL" = "logseq" ]; then
+    DEFAULT_PATH="$HOME/Documents/Logseq"
+else
+    DEFAULT_PATH="$HOME/Documents/ObsidianVault"
+fi
+
+echo -e "${BOLD}Where do you want to create your wiki?${NC}"
+read -p "Path [$DEFAULT_PATH]: " wiki_path
+wiki_path="${wiki_path:-$DEFAULT_PATH}"
+wiki_path="${wiki_path/#\~/$HOME}"
+
+if [ ! -d "$wiki_path" ]; then
+    echo -e "${YELLOW}Directory does not exist. Create it? [y/n]${NC}"
+    read -p "" create_dir
+    if [ "$create_dir" = "y" ] || [ "$create_dir" = "Y" ]; then
+        mkdir -p "$wiki_path"
+        echo -e "${GREEN}Created: $wiki_path${NC}"
+    else
+        echo -e "${RED}Exiting. Please create the directory first.${NC}"
+        exit 1
+    fi
+fi
+echo ""
+
+# ----- Step 3: Raw path -----
+DEFAULT_RAW="$wiki_path/raw"
+echo -e "${BOLD}Where should raw source files be stored?${NC}"
+read -p "Path [$DEFAULT_RAW]: " raw_path
+raw_path="${raw_path:-$DEFAULT_RAW}"
+raw_path="${raw_path/#\~/$HOME}"
+
+if [ ! -d "$raw_path" ]; then
+    mkdir -p "$raw_path"
+    echo -e "${GREEN}Created: $raw_path${NC}"
+fi
+echo ""
+
+# ----- Step 4: Pages directory -----
+if [ "$TOOL" = "logseq" ]; then
+    PAGES_DIR="pages"
+else
+    PAGES_DIR=""
+fi
+
+pages_path="$wiki_path/$PAGES_DIR"
+if [ -n "$PAGES_DIR" ] && [ ! -d "$pages_path" ]; then
+    mkdir -p "$pages_path"
+fi
+
+# ----- Step 5: Namespaces -----
+DEFAULT_NS="Tech Business Content Projects People Learning Reference"
+echo -e "${BOLD}Which namespaces do you want?${NC}"
+echo -e "Default: ${CYAN}$DEFAULT_NS${NC}"
+read -p "Enter space-separated list (or press Enter for default): " custom_ns
+NAMESPACES="${custom_ns:-$DEFAULT_NS}"
+
+for ns in $NAMESPACES; do
+    if [[ ! "$ns" =~ ^[A-Za-z][A-Za-z0-9-]*$ ]]; then
+        echo -e "${RED}Invalid namespace name: '$ns'${NC}"
+        exit 1
+    fi
+done
+echo -e "${GREEN}Namespaces: $NAMESPACES${NC}"
+echo ""
+
+# ----- Step 6: Memory path -----
+echo -e "${BOLD}Where is your Claude Code memory directory?${NC}"
+echo -e "(Usually: ~/.claude/projects/<project>/memory/)"
+read -p "Path [skip]: " memory_path
+memory_path="${memory_path/#\~/$HOME}"
+echo ""
+
+# ----- Step 7: Git init -----
+if [ ! -d "$wiki_path/.git" ]; then
+    echo -e "${BOLD}Initialize git in $wiki_path?${NC} [y/n]"
+    read -p "" init_git
+    if [ "$init_git" = "y" ] || [ "$init_git" = "Y" ]; then
+        cd "$wiki_path"
+        git init
+
+        if [ "$TOOL" = "logseq" ]; then
+            cat > .gitignore << 'GITIGNORE'
+logseq/bak/
+logseq/.recycle/
+.DS_Store
+.logseq/
+.claude/memory/
+GITIGNORE
+        else
+            cat > .gitignore << 'GITIGNORE'
+.obsidian/workspace.json
+.obsidian/workspace-mobile.json
+.DS_Store
+.trash/
+.claude/memory/
+GITIGNORE
+        fi
+        echo -e "${GREEN}Git initialized with .gitignore${NC}"
+    fi
+fi
+echo ""
+
+# ----- Step 8: Set template directory -----
+TEMPLATE_DIR="$SCRIPT_DIR/templates/$TOOL"
+
+if [ ! -d "$TEMPLATE_DIR" ]; then
+    # Use pages directly if tool-specific templates don't exist
+    TEMPLATE_DIR="$SCRIPT_DIR/templates/pages"
+fi
+
+if [ ! -d "$TEMPLATE_DIR" ]; then
+    echo -e "${RED}Templates not found at $TEMPLATE_DIR${NC}"
+    exit 1
+fi
+
+# ----- Step 9: Create wiki pages via Python -----
+echo -e "${BOLD}Creating wiki pages...${NC}"
+
+TODAY=$(date +%Y-%m-%d)
+
+python3 << PYEOF
+import os
+
+tool = "$TOOL"
+pages_path = "$pages_path"
+wiki_path = "$wiki_path"
+raw_path = "$raw_path"
+template_dir = "$TEMPLATE_DIR"
+namespaces = "$NAMESPACES".split()
+today = "$TODAY"
+
+def read_template(name):
+    with open(os.path.join(template_dir, name)) as f:
+        return f.read()
+
+def write_file(path, content):
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    if os.path.exists(path):
+        print(f"  Skipped (already exists): {os.path.basename(path)}")
+        return False
+    with open(path, 'w') as f:
+        f.write(content)
+    return True
+
+if tool == "logseq":
+    # Schema
+    ns_list = ", ".join(f"Wiki/{ns}" for ns in namespaces)
+    schema = read_template("Wiki___Schema.md")
+    schema = schema.replace("2026-04-16", today)
+    if write_file(os.path.join(pages_path, "Wiki___Schema.md"), schema):
+        print(f"  Created: Wiki/Schema")
+
+    # Dashboard
+    dashboard = read_template("Wiki___Dashboard.md")
+    dashboard = dashboard.replace("2026-04-16", today)
+    if write_file(os.path.join(pages_path, "Wiki___Dashboard.md"), dashboard):
+        print(f"  Created: Wiki/Dashboard")
+
+    # Hub
+    hub = read_template("Wiki___Hub.md")
+    hub = hub.replace("2026-04-16", today)
+    if write_file(os.path.join(pages_path, "Wiki___Hub.md"), hub):
+        print(f"  Created: Wiki/Hub")
+
+    # Namespace hubs
+    for ns in namespaces:
+        ns_hub = read_template(f"{ns}___Hub.md")
+        ns_hub = ns_hub.replace("2026-04-16", today)
+        if write_file(os.path.join(pages_path, f"Wiki___{ns}.md"), ns_hub):
+            print(f"  Created: Wiki/{ns}")
+
+else:
+    wiki_dir = os.path.join(wiki_path, "Wiki")
+    os.makedirs(wiki_dir, exist_ok=True)
+
+    # Schema
+    schema = read_template("Wiki___Schema.md")
+    schema = schema.replace("2026-04-16", today)
+    if write_file(os.path.join(wiki_dir, "Schema.md"), schema):
+        print(f"  Created: Wiki/Schema.md")
+
+    # Dashboard
+    dashboard = read_template("Wiki___Dashboard.md")
+    dashboard = dashboard.replace("2026-04-16", today)
+    if write_file(os.path.join(wiki_dir, "Dashboard.md"), dashboard):
+        print(f"  Created: Wiki/Dashboard.md")
+
+    # Hub
+    hub = read_template("Wiki___Hub.md")
+    hub = hub.replace("2026-04-16", today)
+    if write_file(os.path.join(wiki_dir, "Hub.md"), hub):
+        print(f"  Created: Wiki/Hub.md")
+
+    # Namespace directories and hubs
+    for ns in namespaces:
+        ns_dir = os.path.join(wiki_dir, ns)
+        os.makedirs(ns_dir, exist_ok=True)
+        ns_hub = read_template(f"{ns}___Hub.md")
+        ns_hub = ns_hub.replace("2026-04-16", today)
+        if write_file(os.path.join(ns_dir, "Hub.md"), ns_hub):
+            print(f"  Created: Wiki/{ns}/Hub.md")
+
+# Create raw README
+raw_readme = '''# Raw Sources
+
+This directory stores immutable source material, organized by topic.
+
+## Structure
+
+```
+raw/
+  <topic>/
+    YYYY-MM-DD-descriptive-slug.md
+```
+
+## Conventions
+
+- Files are **immutable** — never modify after creation
+- New sources go into existing topic directories when possible
+- Create new topic subdirectories only for genuinely distinct topics
+- Wiki pages reference their raw sources via the `source` property
+'''
+with open(os.path.join(raw_path, 'README.md'), 'w') as f:
+    f.write(raw_readme)
+print(f"  Created: raw/README.md")
+
+PYEOF
+
+# ----- Step 10: Create llm-wiki.yml -----
+CONFIG_FILE="$wiki_path/llm-wiki.yml"
+
+write_config() {
+    cat > "$CONFIG_FILE" << YAML
+# llm-wiki-enhanced configuration
+# Generated by setup.sh on $(date +%Y-%m-%d)
+
+tool: $TOOL
+wiki_path: $wiki_path
+pages_dir: $PAGES_DIR
+raw_path: $raw_path
+memory_path: ${memory_path:-""}
+
+namespaces:
+$(for ns in $NAMESPACES; do echo "  - $ns"; done)
+YAML
+    echo -e "  ${GREEN}Created: llm-wiki.yml${NC}"
+}
+
+if [ -f "$CONFIG_FILE" ]; then
+    echo -e "${YELLOW}llm-wiki.yml already exists. Overwrite? [y/n]${NC}"
+    read -p "" overwrite_config
+    if [ "$overwrite_config" = "y" ] || [ "$overwrite_config" = "Y" ]; then
+        write_config
+    else
+        echo -e "  Keeping existing config."
+    fi
+else
+    write_config
+fi
+
+# ----- Step 11: Install /wiki commands -----
+echo ""
+echo -e "${BOLD}Install /wiki commands for Claude Code?${NC}"
+echo "This copies .claude/commands/ to your project's .claude/commands/ directory."
+read -p "Project path (or 'skip'): " project_path
+
+if [ "$project_path" != "skip" ] && [ -n "$project_path" ]; then
+    project_path="${project_path/#\~/$HOME}"
+    COMMANDS_DIR="$project_path/.claude/commands"
+    mkdir -p "$COMMANDS_DIR"
+
+    cp "$SCRIPT_DIR/.claude/commands/wiki.md" "$COMMANDS_DIR/wiki.md"
+    cp "$SCRIPT_DIR/.claude/commands/wiki-ingest.md" "$COMMANDS_DIR/wiki-ingest.md"
+    cp "$SCRIPT_DIR/.claude/commands/wiki-query.md" "$COMMANDS_DIR/wiki-query.md"
+    cp "$SCRIPT_DIR/.claude/commands/wiki-lint.md" "$COMMANDS_DIR/wiki-lint.md"
+    cp "$SCRIPT_DIR/.claude/commands/wiki-status.md" "$COMMANDS_DIR/wiki-status.md"
+    cp "$SCRIPT_DIR/.claude/commands/wiki-import.md" "$COMMANDS_DIR/wiki-import.md"
+
+    echo -e "${GREEN}Installed 6 commands to $COMMANDS_DIR${NC}"
+fi
+
+# ----- Step 12: Initial commit -----
+if [ -d "$wiki_path/.git" ]; then
+    echo ""
+    cd "$wiki_path"
+    git add -A
+    git commit -m "wiki: initial setup via llm-wiki-enhanced
+
+Schema, Dashboard, Hub pages for $(echo $NAMESPACES | wc -w | tr -d ' ') namespaces.
+Raw directory for immutable source preservation.
+Tool: $TOOL
+
+Generated by https://github.com/VinceJan/llm-wiki-enhanced" 2>/dev/null || true
+    echo -e "${GREEN}Initial commit created.${NC}"
+fi
+
+# ----- Done -----
+echo ""
+echo -e "${CYAN}${BOLD}Setup complete!${NC}"
+echo ""
+echo -e "Your wiki is at: ${BOLD}$wiki_path${NC}"
+echo -e "Raw sources at:  ${BOLD}$raw_path${NC}"
+echo -e "Config file:     ${BOLD}$CONFIG_FILE${NC}"
+echo ""
+echo -e "Next steps:"
+echo -e "  1. Open your wiki in $TOOL (or any Markdown editor)"
+echo -e "  2. In Claude Code, try: ${CYAN}/wiki-ingest \"your first source\"${NC}"
+echo -e "  3. Run ${CYAN}/wiki-status${NC} to see your wiki metrics"
+echo ""
+echo -e "Documentation: ${CYAN}https://github.com/VinceJan/llm-wiki-enhanced${NC}"

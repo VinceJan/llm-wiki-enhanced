@@ -1,0 +1,22 @@
+# Claude memory (credentials, secrets)
+.claude/memory/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/
+
+# Obsidian workspace (user-specific)
+.obsidian/workspace.json
+.obsidian/workspace-mobile.json
+
+# Logseq
+.logseq/
+logseq/bak/
+logseq/.recycle/
+
+# Trash
+.trash/
