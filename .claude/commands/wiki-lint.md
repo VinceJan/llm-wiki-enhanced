@@ -45,8 +45,10 @@ Read `llm-wiki.yml` from the wiki root directory FIRST to determine:
 
 ## Credential Leak Patterns
 
-Scan for these regex patterns:
-- `token::`, `password::`, `secret::`, `api-key::`
+Scan for these patterns:
+- Logseq/Obsidian property formats: `token::`, `password::`, `secret::`, `api-key::`, `api_key::`
+- Environment variable assignments: `API_KEY=`, `SECRET_KEY=`, `TOKEN=`, `PASSWORD=`, `PRIVATE_KEY=`
+- Common key prefixes: `sk-`, `ghp_`, `gho_`, `xoxb-`, `eyJ` (JWT tokens)
 - Base64 strings > 40 characters that look like tokens: `[A-Za-z0-9+/]{40,}`
 </context>
 
@@ -64,10 +66,10 @@ Phase 2 - Check Rules:
   - Missing Properties: pages without type-specific required properties
   - Broken References: [[links]] pointing to non-existent pages
   - Hub Completeness: hub pages missing children in their namespace
-  - Credential Leak: regex scan for token/password/secret patterns
+  - Credential Leak: scan for credential patterns listed above
   - Empty Pages: pages with only properties, no content
   - Cross-ref Minimum: pages with fewer than 1 outgoing [[link]]
-  - L1/L2 Duplicates: same info in Memory AND Wiki -> warning
+  - L1/L2 Duplicates: if memory_path is configured and accessible, check for duplicate info between Memory and Wiki. Skip if memory is not accessible.
 
 Phase 3 - Report:
   - Group findings by severity (critical, warning, info)
@@ -84,6 +86,10 @@ Phase 4 - Auto-Fix (only with --fix flag):
 Phase 5 - Dashboard Update:
   - Update Dashboard page with current health metrics
   - Timestamp the lint run
+
+Error Handling:
+  - If any step fails (file permission, glob returns nothing), report the specific error and skip that check gracefully.
+  - Continue with remaining checks — one failure should not abort the entire lint run.
 </workflow>
 
 <constraints>

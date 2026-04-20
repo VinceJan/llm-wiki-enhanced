@@ -69,7 +69,8 @@ Read `llm-wiki.yml` from the wiki root directory FIRST to determine:
 ## Workflow: ingest
 
 Phase 0 - Source Preservation (raw/):
-  - Identify source type (URL -> WebFetch, file path -> Read, text -> parse directly)
+  - Identify source type (URL -> WebFetch, file path -> Read, text -> parse directly).
+  - If WebFetch fails (404, login required, anti-crawl), tell the user what happened and ask them to paste the content directly.
   - Pick a topic directory under raw/. Check existing raw/ subdirectories first; reuse one if the topic is close enough. Create a new subdirectory only for genuinely distinct topics.
   - Save the complete source content to `raw/<topic>/YYYY-MM-DD-descriptive-slug.md`.
     - Slug from source title, kebab-case, max 60 characters.
@@ -80,18 +81,18 @@ Phase 0 - Source Preservation (raw/):
   - This raw file is IMMUTABLE — never modify after creation.
 
 Phase 1 - Source Analysis:
+  - Check content sufficiency: if the source has fewer than ~100 words or contains no extractable facts, tell the user the content is too thin and ask for more details before proceeding.
   - Extract: entities, facts, relationships, dates, decisions from the raw source
   - Classify: Tech, Business, Content, Projects, People, Learning, Reference, Careers
   - L1/L2 Check: Is this a quick rule/gotcha? -> Recommend Memory. Deep knowledge? -> Wiki
 
 Phase 2 - Wiki Scan:
-  - Read llm-wiki.yml for tool config
   - Read Schema page for current conventions
   - Check target pages: do they exist? (Glob for wiki pages)
   - Read existing target pages
   - Identify: pages to create, pages to update, cross-refs to add
 
-Phase 3 - Page Operations (target: 5-15 page touches):
+Phase 3 - Page Operations (target: 1-5 pages for short sources, 5-15 for long sources):
   - Create new pages with all required properties (per Schema)
   - Update existing pages: append new facts as new blocks (NEVER overwrite existing content)
   - Update hub pages (list new child pages)
@@ -104,11 +105,12 @@ Phase 4 - Quality Gate:
   - All pages have at least 1 [[cross-reference]]?
   - No credentials in wiki content?
   - Raw source saved successfully?
-  - Count page touches (warn if < 5 or > 20)
+  - Count page touches (warn if 0 for a non-trivial source, or if > 20)
 
 Phase 5 - Report:
   - Summary: raw file saved path, pages created, pages updated, cross-refs added
   - List any warnings or skipped items
+  - If the entire process failed at any step, explain what went wrong and suggest how to retry
 </workflow>
 
 <constraints>

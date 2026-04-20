@@ -9,6 +9,19 @@ Persistent knowledge management powered by Claude Code. Maintains a structured w
 
 ---
 
+## First Time Setup
+
+If this is your first run:
+
+1. Ensure `llm-wiki.yml` exists in your wiki root (see `config.example.yml` in the repo)
+2. Ensure `raw/` directory exists alongside your wiki
+3. Run `/wiki-status` — if it reports "no pages yet", you're ready to ingest
+4. Start with `/wiki-ingest https://...` to add your first page
+
+If `llm-wiki.yml` is missing: tell the user the config file is required, show the minimal config needed, and stop.
+
+---
+
 ## Recommended: Use Specific Sub-Commands
 
 | Command | Purpose |

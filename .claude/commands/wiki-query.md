@@ -56,6 +56,7 @@ Phase 1 - Search:
   - Parse question -> identify relevant namespaces and entities
   - Glob for candidate pages by namespace
   - Grep for keywords across wiki pages
+  - If no relevant pages found: tell the user the wiki has no content on this topic, suggest running /wiki-ingest with a relevant source, and stop.
   - Read top 3-5 most relevant pages
   - If needed, also read L1 Memory for complete picture
 
@@ -66,14 +67,15 @@ Phase 2 - Synthesize:
   - Formulate comprehensive answer with source attribution
 
 Phase 3 - Optional Write-Back:
-  - If query reveals a wiki gap -> offer to create/update pages
-  - If synthesis produces a useful summary -> offer to file as new page
-  - User must confirm before any writes
+  - Only offer write-back if the answer covers a topic that does NOT already have a wiki page.
+  - If synthesis produces a useful summary for a genuinely new topic -> offer to file as new page.
+  - User must confirm before any writes.
 
 Phase 4 - Output:
   - Answer with source pages: "Sources: [[Wiki/Tech/Deployment]], [[Wiki/Reference/Gotchas]]"
   - Flag stale or low-confidence sources
   - Suggest related pages
+  - If the search yielded no results, clearly state this and do not fabricate an answer from training knowledge.
 </workflow>
 
 <constraints>
@@ -81,6 +83,7 @@ Phase 4 - Output:
 - ALWAYS cite sources with [[Wiki/Namespace/Page]] links
 - Flag sources with confidence < high or updated > 90 days ago
 - Do NOT write files unless user confirms
+- Do NOT fabricate answers from training knowledge when the wiki has nothing — say so explicitly
 - Max 3 wiki pages loaded simultaneously (JIT retrieval)
 - Dates: ISO 8601 (YYYY-MM-DD)
 </constraints>

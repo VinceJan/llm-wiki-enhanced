@@ -7,20 +7,20 @@ updated: 2026-04-16
 
 # Wiki Hub
 
-This is the top-level index of all namespaces in this knowledge base.
+Top-level index of all namespaces in this knowledge base. Each namespace has its own Hub page listing child pages.
 
 ## Namespaces
 
-- [[Wiki/Tech/Hub]] — Technical knowledge, tools, frameworks, patterns
-- [[Wiki/Business/Hub]] — Business intelligence, clients, strategy, market analysis
-- [[Wiki/Content/Hub]] — Content strategy, writing, media, publishing
-- [[Wiki/Projects/Hub]] — Active and completed projects with timelines
-- [[Wiki/People/Hub]] — People, relationships, collaborators, mentors
-- [[Wiki/Learning/Hub]] — Courses, books, study notes, research
-- [[Wiki/Reference/Hub]] — Reference materials, cheat sheets, documentation
-- [[Wiki/Careers/Hub]] — Career planning, job search, professional development
+- [[Wiki/Tech/Hub]] — Frameworks, tools, architectures, deployment, patterns
+- [[Wiki/Business/Hub]] — Market analysis, strategy, clients, revenue models
+- [[Wiki/Content/Hub]] — Writing, publishing, media, content calendars, SEO
+- [[Wiki/Projects/Hub]] — Active and completed projects with timelines and status
+- [[Wiki/People/Hub]] — Collaborators, mentors, contacts, relationships
+- [[Wiki/Learning/Hub]] — Courses, books, tutorials, research, study notes
+- [[Wiki/Reference/Hub]] — Cheat sheets, gotchas, best practices, documentation
+- [[Wiki/Careers/Hub]] — Resume, interviews, job search, career planning
 
 ## System Pages
 
-- [[Wiki/Schema]] — Page type definitions and conventions
+- [[Wiki/Schema]] — Page type definitions and property conventions
 - [[Wiki/Dashboard]] — Health metrics and status overview

@@ -48,10 +48,11 @@ Phase 1 - Metrics:
   - Break down by type (entity, project, knowledge, feedback, hub)
   - Find oldest and newest updated dates
   - Count total [[cross-references]]
+  - If wiki/pages directory doesn't exist or is empty: report "wiki has no pages yet — run /wiki-ingest to get started" and stop
 
 Phase 2 - Health:
   - Lightweight lint (no file modifications)
-  - Count: orphans, stale pages, broken refs
+  - Count: orphans (pages with 0 incoming links), stale pages (updated > 90 days, high confidence), broken refs
   - No detailed issue list (use /wiki-lint for that)
 
 Phase 3 - Activity:
@@ -61,11 +62,17 @@ Phase 3 - Activity:
 
 Phase 4 - Output:
   - Formatted dashboard with all metrics
-  - Comparison to last status run (if Dashboard page exists)
+  - Comparison to last status run (if Dashboard page exists and has prior metrics)
+  - Update Dashboard page with current metrics and timestamp
+
+Error Handling:
+  - If git log fails (not a git repo): skip git-based activity metrics, note why
+  - If Dashboard page doesn't exist: skip comparison, note that creating one via /wiki-ingest would enable trend tracking
+  - If counting fails (file permissions): report the error and continue with remaining metrics
 </workflow>
 
 <constraints>
-- Do NOT modify any files during status
+- Do NOT modify wiki content pages (Dashboard page timestamp update is the only exception)
 - Use glob/grep for counting, not full file reads
 - Git log commands for activity metrics
 - Dates: ISO 8601 (YYYY-MM-DD)
