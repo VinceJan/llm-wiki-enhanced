@@ -158,14 +158,6 @@ namespaces:
   - Reference
 ```
 
-## Comparison with Other Projects
-
-| Project | Stars | Raw Archive | L1/L2 | Best For |
-|---------|-------|-------------|-------|----------|
-| **llm-wiki-enhanced** (this) | — | ✅ | ✅ | Source traceability, production use |
-| [Astro-Han/karpathy-llm-wiki](https://github.com/Astro-Han/karpathy-llm-wiki) | 371+ | ❌ | ❌ | Quick setup, minimal config |
-| [MehmetGoekce/llm-wiki](https://github.com/MehmetGoekce/llm-wiki) | 44 | ❌ | ✅ | L1/L2 architecture |
-
 ## FAQ
 
 ### Why preserve raw sources?

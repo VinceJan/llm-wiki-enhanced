@@ -143,14 +143,6 @@ namespaces:
   - Reference
 ```
 
-## 与其他项目对比
-
-| 项目 | Stars | Raw 归档 | L1/L2 | 适合场景 |
-|------|-------|----------|-------|----------|
-| **llm-wiki-enhanced**（本项目） | — | ✅ | ✅ | 来源追溯、生产使用 |
-| [Astro-Han/karpathy-llm-wiki](https://github.com/Astro-Han/karpathy-llm-wiki) | 371+ | ❌ | ❌ | 快速安装、最小配置 |
-| [MehmetGoekce/llm-wiki](https://github.com/MehmetGoekce/llm-wiki) | 44 | ❌ | ✅ | L1/L2 架构 |
-
 ## FAQ
 
 ### 为什么保留 raw 源？
