@@ -64,13 +64,20 @@ Before submitting changes:
 
 ```
 llm-wiki-enhanced/
-├── .claude/commands/     # Core framework (English)
+├── .claude/commands/     # Core framework commands (English)
 ├── templates/pages/      # Wiki template pages (English)
 ├── setup.sh              # Installation script
 ├── config.example.yml    # Configuration example
 ├── README.md             # English documentation
-├── README.zh-CN.md       # Chinese documentation
-└── ...                   # Other translations
+├── docs/
+│   ├── USAGE.md          # Detailed usage guide
+│   └── langs/            # Translated README files
+│       ├── README.zh-CN.md
+│       ├── README.fr.md
+│       ├── README.pt.md
+│       ├── README.ja.md
+│       └── README.ko.md
+└── SECURITY.md           # Security model and disclosure
 ```
 
 ## Questions?

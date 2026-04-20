@@ -11,14 +11,14 @@ This is the top-level index of all namespaces in this knowledge base.
 
 ## Namespaces
 
-- [[Tech]] — Technical knowledge, tools, frameworks, patterns
-- [[Business]] — Business intelligence, clients, strategy, market analysis
-- [[Content]] — Content strategy, writing, media, publishing
-- [[Projects]] — Active and completed projects with timelines
-- [[People]] — People, relationships, collaborators, mentors
-- [[Learning]] — Courses, books, study notes, research
-- [[Reference]] — Reference materials, cheat sheets, documentation
-- [[Careers]] — Career planning, job search, professional development
+- [[Wiki/Tech/Hub]] — Technical knowledge, tools, frameworks, patterns
+- [[Wiki/Business/Hub]] — Business intelligence, clients, strategy, market analysis
+- [[Wiki/Content/Hub]] — Content strategy, writing, media, publishing
+- [[Wiki/Projects/Hub]] — Active and completed projects with timelines
+- [[Wiki/People/Hub]] — People, relationships, collaborators, mentors
+- [[Wiki/Learning/Hub]] — Courses, books, study notes, research
+- [[Wiki/Reference/Hub]] — Reference materials, cheat sheets, documentation
+- [[Wiki/Careers/Hub]] — Career planning, job search, professional development
 
 ## System Pages
 

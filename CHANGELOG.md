@@ -10,7 +10,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - **Raw Directory Support**: Unlike other LLM Wiki implementations, this framework preserves original sources in an immutable `raw/<topic>/` directory
-- **Five Sub-Commands**: Split into dedicated commands for better UX:
+- **Six Sub-Commands**: Split into dedicated commands for better UX:
+  - `/wiki`: Entry point with architecture summary
   - `/wiki-ingest`: Process sources → save to raw → compile to wiki
   - `/wiki-query`: Search and synthesize answers with citations
   - `/wiki-lint`: Health check with 9 rules, `--fix` for auto-repair
@@ -26,6 +27,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Commands rewritten in English (original MehmetGoekce used mixed language)
 - Added `raw_path` configuration option
 - Enhanced setup.sh with raw directory creation
+- Untranslated READMEs consolidated into `docs/langs/` directory
+
+### Added (Post-Release Patches)
+
+- `SECURITY.md`: Security model documentation and responsible disclosure process
+- `.editorconfig`: Code style consistency across the project
+- Unified all 6 language README files to identical 11-section structure
+- Fixed namespace consistency (8 namespaces across all config sources)
+- Windows compatibility notes for setup.sh
 
 ### Based On
 

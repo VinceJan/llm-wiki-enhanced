@@ -23,7 +23,7 @@ LLM Wikiは[Karpathy](https://gist.github.com/karpathy/442a6bf555914893e9891c115
 |------|---------------|----------|
 | **Rawアーカイブ** | ✅ 不変 `raw/` ディレクトリ | ❌ 保存されない |
 | **L1/L2キャッシュ** | ✅ 自動ロードルール + オンデマンドwiki | ⚠️ 異なる |
-| **サブコマンド** | ✅ 5つの専用コマンド | ⚠️ 単一コマンド |
+| **サブコマンド** | ✅ 6つの専用コマンド | ⚠️ 単一コマンド |
 | **健全性チェック** | ✅ 9ルール `--fix` 対応 | ⚠️ 基本的 |
 | **資格情報セキュリティ** | ✅ Lintスキャンで漏洩検知 | ❌ なし |
 | **ツールサポート** | ✅ Obsidian + Logseq | ✅ 同様 |
@@ -62,7 +62,7 @@ LLM Wikiは[Karpathy](https://gist.github.com/karpathy/442a6bf555914893e9891c115
 
 | 層 | 目的 | 動作 |
 |----|------|------|
-| **Raw** | 不変ソースアーカイブ | 作成後永不変更 |
+| **Raw** | 不変ソースアーカイブ | 作成後は決して変更されない |
 | **L1** | ルール、資格情報、設定 | 各Claudeセッションで自動ロード |
 | **L2** | 構造化された知識ページ | オンデマンドで照会 |
 
@@ -151,9 +151,12 @@ memory_path: ~/.claude/projects/my-wiki/memory/
 namespaces:
   - Tech
   - Business
+  - Content
   - Projects
+  - People
   - Learning
   - Reference
+  - Careers
 ```
 
 ## FAQ

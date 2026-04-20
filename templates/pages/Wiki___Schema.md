@@ -1,6 +1,7 @@
 ---
 type: hub
 namespace: Wiki
+# Date below is replaced by setup.sh at installation time
 created: 2026-04-16
 updated: 2026-04-16
 ---

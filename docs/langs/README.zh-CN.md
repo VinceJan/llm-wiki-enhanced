@@ -23,7 +23,7 @@ LLM Wiki 是 [Karpathy](https://gist.github.com/karpathy/442a6bf555914893e9891c1
 |------|--------|----------|
 | **Raw 源归档** | ✅ 不可变 `raw/` 目录 | ❌ 不保留 |
 | **L1/L2 缓存架构** | ✅ 会话加载规则 + 按需 wiki | ⚠️ 各异 |
-| **子命令** | ✅ 5 个专用命令 | ⚠️ 单命令 |
+| **子命令** | ✅ 6 个专用命令 | ⚠️ 单命令 |
 | **健康检查** | ✅ 9 条规则 + `--fix` | ⚠️ 基础 |
 | **凭证安全** | ✅ Lint 扫描泄漏 | ❌ 无 |
 | **工具支持** | ✅ Obsidian + Logseq | ✅ 相同 |
@@ -138,9 +138,12 @@ memory_path: ~/.claude/projects/my-wiki/memory/
 namespaces:
   - Tech
   - Business
+  - Content
   - Projects
+  - People
   - Learning
   - Reference
+  - Careers
 ```
 
 ## FAQ

@@ -23,7 +23,7 @@ LLM Wiki é um conceito de gerenciamento de conhecimento introduzido por [Karpat
 |----------------|--------------|----------------------|
 | **Arquivo Raw** | ✅ Diretório `raw/` imutável | ❌ Não preservado |
 | **Arquitetura L1/L2** | ✅ Regras auto-carregadas + wiki on-demand | ⚠️ Variável |
-| **Sub-comandos** | ✅ 5 comandos dedicados | ⚠️ Comando único |
+| **Sub-comandos** | ✅ 6 comandos dedicados | ⚠️ Comando único |
 | **Verificação de saúde** | ✅ 9 regras com `--fix` | ⚠️ Básico |
 | **Segurança de credenciais** | ✅ Scan lint para vazamentos | ❌ Nenhum |
 | **Suporte a ferramentas** | ✅ Obsidian + Logseq | ✅ Igual |
@@ -151,9 +151,12 @@ memory_path: ~/.claude/projects/my-wiki/memory/
 namespaces:
   - Tech
   - Business
+  - Content
   - Projects
+  - People
   - Learning
   - Reference
+  - Careers
 ```
 
 ## FAQ

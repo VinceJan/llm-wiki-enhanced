@@ -135,7 +135,7 @@ applies-to: coding
 → Dashboard shows: 3 pages, 0 raw files, 0 issues
 
 # Day 2: Ingest first source
-/wiki-ingest https://arxiv.org/abs/1706-03762
+/wiki-ingest https://arxiv.org/abs/1706.03762
 → Raw: raw/ai/2026-04-17-attention-is-all-you-need.md
 → Wiki: wiki/pages/Tech/Transformer-Architecture.md
 
@@ -161,11 +161,13 @@ Run `/wiki-lint --fix` weekly to keep wiki healthy.
 ### Namespace Organization
 
 - **Tech**: Technical knowledge, tools, frameworks
+- **Business**: Business intelligence, clients, strategy, market analysis
+- **Content**: Content strategy, writing, media, publishing
 - **Projects**: Active/completed projects
+- **People**: Contacts, collaborators, mentors
 - **Learning**: Courses, books, study notes
 - **Reference**: Cheat sheets, gotchas, FAQs
-- **People**: Contacts, collaborators
-- **Business**: Strategy, market analysis
+- **Careers**: Career planning, job search, professional development
 
 ### Confidence Levels
 

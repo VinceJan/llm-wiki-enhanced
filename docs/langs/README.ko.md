@@ -23,7 +23,7 @@ LLM Wiki는 [Karpathy](https://gist.github.com/karpathy/442a6bf555914893e9891c11
 |------|-------------|-----------|
 | **Raw 보관** | ✅ 불변 `raw/` 디렉토리 | ❌ 보존 안됨 |
 | **L1/L2 캐시** | ✅ 자동 로드 규칙 + 온디맨드 wiki | ⚠️ 다양함 |
-| **서브커맨드** | ✅ 5개 전용 커맨드 | ⚠️ 단일 커맨드 |
+| **서브커맨드** | ✅ 6개 전용 커맨드 | ⚠️ 단일 커맨드 |
 | **건전성 체크** | ✅ 9개 규칙, `--fix` 자동수정 | ⚠️ 기본 |
 | **자격증명 보안** | ✅ Lint 스캔으로 유출 감지 | ❌ 없음 |
 | **도구 지원** | ✅ Obsidian + Logseq | ✅ 동일 |
@@ -62,7 +62,7 @@ LLM Wiki는 [Karpathy](https://gist.github.com/karpathy/442a6bf555914893e9891c11
 
 | 계층 | 목적 | 동작 |
 |------|------|------|
-| **Raw** | 불변 소스 아카이브 | 생성 후永不수정 |
+| **Raw** | 불변 소스 아카이브 | 생성 후 절대 수정되지 않음 |
 | **L1** | 규칙, 자격증명, 선호도 | 매 Claude 세션에서 자동 로드 |
 | **L2** | 구조화된 지식 페이지 | 온디맨드 조회 |
 
@@ -151,9 +151,12 @@ memory_path: ~/.claude/projects/my-wiki/memory/
 namespaces:
   - Tech
   - Business
+  - Content
   - Projects
+  - People
   - Learning
   - Reference
+  - Careers
 ```
 
 ## FAQ

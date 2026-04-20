@@ -1,4 +1,7 @@
 #!/bin/bash
+# llm-wiki-enhanced setup script
+# Requires bash 3.2+ (macOS, Linux, Git Bash on Windows, WSL, or Cygwin)
+# Windows users: run this script from Git Bash, WSL, or Cygwin terminal
 set -eo pipefail
 
 # Detect script location BEFORE any cd operations
@@ -57,7 +60,7 @@ wiki_path="${wiki_path/#\~/$HOME}"
 
 if [ ! -d "$wiki_path" ]; then
     echo -e "${YELLOW}Directory does not exist. Create it? [y/n]${NC}"
-    read -p "" create_dir
+    read -p "> " create_dir
     if [ "$create_dir" = "y" ] || [ "$create_dir" = "Y" ]; then
         mkdir -p "$wiki_path"
         echo -e "${GREEN}Created: $wiki_path${NC}"
@@ -94,7 +97,7 @@ if [ -n "$PAGES_DIR" ] && [ ! -d "$pages_path" ]; then
 fi
 
 # ----- Step 5: Namespaces -----
-DEFAULT_NS="Tech Business Content Projects People Learning Reference"
+DEFAULT_NS="Tech Business Content Projects People Learning Reference Careers"
 echo -e "${BOLD}Which namespaces do you want?${NC}"
 echo -e "Default: ${CYAN}$DEFAULT_NS${NC}"
 read -p "Enter space-separated list (or press Enter for default): " custom_ns
@@ -119,7 +122,7 @@ echo ""
 # ----- Step 7: Git init -----
 if [ ! -d "$wiki_path/.git" ]; then
     echo -e "${BOLD}Initialize git in $wiki_path?${NC} [y/n]"
-    read -p "" init_git
+    read -p "> " init_git
     if [ "$init_git" = "y" ] || [ "$init_git" = "Y" ]; then
         cd "$wiki_path"
         git init
@@ -294,7 +297,7 @@ YAML
 
 if [ -f "$CONFIG_FILE" ]; then
     echo -e "${YELLOW}llm-wiki.yml already exists. Overwrite? [y/n]${NC}"
-    read -p "" overwrite_config
+    read -p "> " overwrite_config
     if [ "$overwrite_config" = "y" ] || [ "$overwrite_config" = "Y" ]; then
         write_config
     else

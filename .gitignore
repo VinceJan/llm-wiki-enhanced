@@ -1,6 +1,11 @@
 # Claude memory (credentials, secrets)
 .claude/memory/
 
+# Environment variables
+.env
+.env.*
+.env.local
+
 # OS files
 .DS_Store
 Thumbs.db

@@ -23,7 +23,7 @@ LLM Wiki is a knowledge management concept introduced by [Karpathy](https://gist
 |---------|-------------|----------------------|
 | **Raw Source Archive** | ✅ Immutable `raw/` directory | ❌ Not preserved |
 | **L1/L2 Cache Architecture** | ✅ Session-loaded rules + on-demand wiki | ⚠️ Varies |
-| **Sub-Commands** | ✅ 5 dedicated commands | ⚠️ Single command |
+| **Sub-Commands** | ✅ 6 dedicated commands | ⚠️ Single command |
 | **Health Check** | ✅ 9 rules with `--fix` | ⚠️ Basic |
 | **Credential Safety** | ✅ Lint scans for leaks | ❌ None |
 | **Tool Support** | ✅ Obsidian + Logseq | ✅ Same |
@@ -95,6 +95,8 @@ The interactive script will:
 - Create initial pages
 - Install commands to your project
 
+> **Windows users**: Run `setup.sh` from Git Bash, WSL, or Cygwin. Alternatively, use Option 2 (Manual Installation).
+
 ### Option 2: Manual Installation
 
 Copy `.claude/commands/` to your project:
@@ -153,9 +155,12 @@ memory_path: ~/.claude/projects/my-wiki/memory/
 namespaces:
   - Tech
   - Business
+  - Content
   - Projects
+  - People
   - Learning
   - Reference
+  - Careers
 ```
 
 ## FAQ
